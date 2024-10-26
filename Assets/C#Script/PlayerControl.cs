@@ -106,7 +106,13 @@ public class PlayerControl : MonoBehaviour
         bulletRB.velocity = new Vector2(0f, bulletSpeed); // 弾の速度を設定
 
         audioPlayer.PlayAudio(shotSe, volum);
-        //2.5秒後に弾をプールに戻す
-        bulletPool.ReleaseBullet(bulletGB, 2.5f);
+        
+        //弾がアクティブだったら
+        if (bulletGB)
+        {
+            //2秒後に弾をプールに戻す
+            bulletPool.ReleaseBullet(bulletGB, 2f);
+        }
+        
     }
 }

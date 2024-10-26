@@ -47,7 +47,7 @@ public class BulletHit : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // 当たったオブジェクトのタグがPlayerBulletだったら
-        if (collision.gameObject.tag =="PlayerBullet")
+        if (collision.gameObject.tag == "PlayerBullet" && bulletPool != null && effectPool != null && enemyPool != null)
         {
             // ヒットエフェクトを表示
             GameObject effect = effectPool.GetEffect();
@@ -59,24 +59,23 @@ public class BulletHit : MonoBehaviour
             // オーディオ再生
             audioPlayer.PlayAudio(audioClip, volume);
 
-            // 弾オブジェクトをプールに戻すか、適宜処理
+            // 弾オブジェクトをプールに戻す
             bulletPool.ReleaseBullet(collision.gameObject);
 
-            enemyHp--;//体力を減らす
+            enemyHp--; // 体力を減らす
 
             if (enemyHp <= 0)
             {
-                // 敵自身を破壊するか、プールに戻す
+                // 敵をプールに戻す
                 enemyPool.ReleaseEnemy(gameObject);
-                enemyHp = 6;
             }
 
-            //スコアの追加
+            // スコアの追加と表示更新
             ScoreManager.Instance.AddScore(scorePoint);
             ScoreManager.Instance.SetDisplayScore(scoreText);
-
         }
     }
+
 
     private async UniTaskVoid ReturnEffectToPool(GameObject effect, float delay)
     {

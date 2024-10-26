@@ -581,6 +581,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1770240603}
+        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
+        m_MethodName: InitializeBoss
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1770240603}
+        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
+        m_MethodName: ResetSpawner
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &427815742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,6 +730,30 @@ MonoBehaviour:
       - m_Target: {fileID: 1482122636}
         m_TargetAssemblyTypeName: SceneManager, Assembly-CSharp
         m_MethodName: LoadThisScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1770240603}
+        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
+        m_MethodName: InitializeBoss
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1770240603}
+        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
+        m_MethodName: ResetSpawner
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1104,6 +1152,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1770240603}
+        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
+        m_MethodName: InitializeBoss
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1770240603}
+        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
+        m_MethodName: ResetSpawner
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &679633087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1447,6 +1519,10 @@ PrefabInstance:
       propertyPath: enemyBulletPool
       value: 
       objectReference: {fileID: 1303630449}
+    - target: {fileID: 5292581433481256642, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
+      propertyPath: playerBulletPool
+      value: 
+      objectReference: {fileID: 1004586397}
     - target: {fileID: 5292581433481256643, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -1643,6 +1719,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2133978810591609736, guid: 2940d23ca6e59ca46960a792cdc72e4e, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 1019480068096796, guid: 1740469607c5ef74a9dce354e6c48998, type: 3}
     - target: {fileID: 7622971304662812711, guid: 2940d23ca6e59ca46960a792cdc72e4e, type: 3}
       propertyPath: m_Name
       value: PlayerBulletPool
@@ -1854,7 +1934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1042405572
 Transform:
   m_ObjectHideFlags: 0
@@ -2617,6 +2697,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4831074429091722592, guid: 818847860f6941240903651f75b35ac4, type: 3}
   m_PrefabInstance: {fileID: 34689277}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1770240603 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4831074429091722607, guid: 818847860f6941240903651f75b35ac4, type: 3}
+  m_PrefabInstance: {fileID: 34689277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770240602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c323741f73fc96345a05ea69d100872f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1947489578
 GameObject:
   m_ObjectHideFlags: 0
@@ -2786,6 +2877,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1770240603}
+        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
+        m_MethodName: InitializeBoss
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1770240603}
+        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
+        m_MethodName: ResetSpawner
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2044459673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2934,6 +3049,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 629058137152168754, guid: f500e5f33c0dec248b16f7bad7625f72, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 1973797488871700, guid: 48e06088b7e195f40898a828bd389ec3, type: 3}
     - target: {fileID: 629058137152168755, guid: f500e5f33c0dec248b16f7bad7625f72, type: 3}
       propertyPath: m_RootOrder
       value: 5

@@ -23,7 +23,18 @@ public class EnemySpawner : MonoBehaviour
         StartCoroutine(SpawnEnemies());
     }
 
-    private void InitializeBoss()
+    // オブジェクトがアクティブ化されたときの処理
+    void OnEnable()
+    {
+        
+        if (bossIs) 
+        {
+            StartCoroutine(SpawnEnemies());
+        }
+        
+    }
+
+    public void InitializeBoss()
     {
         if (boss == null)
         {
