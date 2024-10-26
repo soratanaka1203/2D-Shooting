@@ -13,7 +13,7 @@ public class IEnemy : MonoBehaviour
 
 public class StraightMovement : IMovement//下に直線運動
 {
-    public float speed = 6.0f;// 移動速度
+    public float speed = 80f;// 移動速度
 
     public void Move(Transform transform)
     {
@@ -23,9 +23,9 @@ public class StraightMovement : IMovement//下に直線運動
 
 public class ZigzagMovement : IMovement//ジグザグ運動
 {
-    public float speed = 0.8f;// 移動速度
-    public float frequency = 8.0f; // ジグザグの周波数
-    public float magnitude = 0.07f;  // ジグザグの幅
+    public float speed = 40f;// 移動速度
+    public float frequency = 5.0f; // ジグザグの周波数
+    public float magnitude = 2.5f;  // ジグザグの幅
 
     public void Move(Transform transform)
     {
@@ -35,8 +35,8 @@ public class ZigzagMovement : IMovement//ジグザグ運動
 }
 public class CircularMovement : IMovement//円運動
 {
-    public float speed = 3f;//移動速度
-    public float radius = 0.03f;//半径
+    public float speed = 4f;//移動速度
+    public float radius = 2f;//半径
 
     private float angle = 0.0f;
 

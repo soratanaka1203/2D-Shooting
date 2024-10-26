@@ -7,14 +7,18 @@ using MyNameSpace;
 
 public class PlayerControl : MonoBehaviour
 {
-    public float speed = 8f;
+    public float speed = 120f;
     Rigidbody2D rb;
     [SerializeField] GameObject shotPoint;
     [SerializeField] BulletPool bulletPool;
-    public float bulletSpeed = 30f;
-
+    public float bulletSpeed = 300f;
     float fireRate = 0.1f;
     float nextFireTime = 0f;
+
+    private Vector3 minBounds; // カメラの左下の境界
+    private Vector3 maxBounds; // カメラの右上の境界
+    private float objectWidth; // プレイヤーの幅
+    private float objectHeight; // プレイヤーの高さ
 
     [SerializeField] AudioClip shotSe;
     [SerializeField] AudioClip dethSe;
@@ -22,23 +26,42 @@ public class PlayerControl : MonoBehaviour
     float volum = 5f;
 
     [SerializeField] GameObject gameOverUi;
+    [SerializeField] GameObject enemySpawner;
 
     void Start()
     {
         gameOverUi.SetActive(false);
+        enemySpawner.SetActive(true);
         rb = GetComponent<Rigidbody2D>();
         if (bulletPool == null)
         {
-            bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
+            bulletPool = GameObject.Find("PlayerBulletPool").GetComponent<BulletPool>();
         }
+
+        // カメラのビューポート境界を計算
+        Camera cam = Camera.main;
+        minBounds = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane)); // カメラ左下
+        maxBounds = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane)); // カメラ右上
+
+        // プレイヤーのサイズを取得（Colliderが必要）
+        objectWidth = GetComponent<SpriteRenderer>().bounds.extents.x; // オブジェクトの幅の半分
+        objectHeight = GetComponent<SpriteRenderer>().bounds.extents.y; // オブジェクトの高さの半分
     }
 
     void Update()
     {
-        //プレイヤーのWASD移動
-        float y = Input.GetAxisRaw("Vertical");
-        float x = Input.GetAxisRaw("Horizontal");
-        transform.position += new Vector3(x, y, 0) * speed * Time.deltaTime;
+        // プレイヤーの移動
+        float moveX = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        float moveY = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+
+        Vector3 newPosition = transform.position + new Vector3(moveX, moveY, 0);
+
+        // カメラの境界内にプレイヤーを制限
+        float clampedX = Mathf.Clamp(newPosition.x, minBounds.x + objectWidth, maxBounds.x - objectWidth);
+        float clampedY = Mathf.Clamp(newPosition.y, minBounds.y + objectHeight, maxBounds.y - objectHeight);
+
+        // プレイヤーの新しい位置を設定
+        transform.position = new Vector3(clampedX, clampedY, newPosition.z);
 
         //弾を打つ
         if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)
@@ -49,6 +72,7 @@ public class PlayerControl : MonoBehaviour
 
     }
 
+    //弾が当たった時の処理
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
@@ -56,7 +80,10 @@ public class PlayerControl : MonoBehaviour
             Destroy(gameObject);
             ScoreManager.Instance.SetRanking(ScoreManager.Instance.score);
             ScoreManager.Instance.ResetScore();
+            //ここから
+            //enemySpawner.G
             gameOverUi.SetActive(true);
+            enemySpawner.SetActive(false);
             audioPlayer.PlayAudio(dethSe, volum);
         }
     }
@@ -79,5 +106,7 @@ public class PlayerControl : MonoBehaviour
         bulletRB.velocity = new Vector2(0f, bulletSpeed); // 弾の速度を設定
 
         audioPlayer.PlayAudio(shotSe, volum);
+        //2.5秒後に弾をプールに戻す
+        bulletPool.ReleaseBullet(bulletGB, 2.5f);
     }
 }

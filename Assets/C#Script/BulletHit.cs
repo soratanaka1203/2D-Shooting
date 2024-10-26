@@ -11,10 +11,10 @@ public class BulletHit : MonoBehaviour
     [SerializeField] private AudioPlayer audioPlayer;
     [SerializeField] private AudioClip audioClip;
     [SerializeField] public float volume;
-    private BulletPool bulletPool;
-    private EffectPool effectPool;
-    private EnemyPool enemyPool;
-    int enemyHp = 6;
+    public BulletPool bulletPool;
+    public EffectPool effectPool;
+    public EnemyPool enemyPool;
+    public int enemyHp = 5;
 
     public int scorePoint = 100; //敵を倒した時に得られるスコアのデフォルト値
 
@@ -22,10 +22,26 @@ public class BulletHit : MonoBehaviour
 
     private void Start()
     {
-        bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();// BulletPoolへの参照
-        effectPool = GameObject.Find("EffectPool").GetComponent<EffectPool>();// EffectPoolへの参照
-        enemyPool = GameObject.Find("EnemyPool").GetComponent<EnemyPool>();//EnemyPoolへの参照
-        scoreText = GameObject.Find("scoreText").GetComponent<TextMeshProUGUI>();
+        if (bulletPool == null)
+        {
+            bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();// BulletPoolへの参照
+            Debug.Log("バレット");
+        }
+        if (effectPool == null)
+        {
+            effectPool = GameObject.Find("EffectPool").GetComponent<EffectPool>();// EffectPoolへの参照
+            Debug.Log("エフェクト");
+        }
+        if (enemyPool == null)
+        {
+            enemyPool = GameObject.Find("EnemyPool").GetComponent<EnemyPool>();//EnemyPoolへの参照
+            Debug.Log("エネミープール");
+        }
+        if (scoreText == null)
+        {
+            scoreText = GameObject.Find("scoreText").GetComponent<TextMeshProUGUI>();
+            Debug.Log("スコアテキスト");
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.Pool;
+using Cysharp.Threading.Tasks;
+using System;
+
 
 public class BulletPool : MonoBehaviour
 {
@@ -40,8 +43,8 @@ public class BulletPool : MonoBehaviour
                 }
             },
             collectionCheck: false,
-            defaultCapacity: 25,
-            maxSize: 35
+            defaultCapacity: 30,
+            maxSize: 50
         );
     }
 
@@ -53,9 +56,22 @@ public class BulletPool : MonoBehaviour
     }
 
 
-    //プールに弾を戻す
-    public void ReleaseBullet(GameObject bullet)
+    // プールに弾を戻す
+    public async UniTaskVoid ReleaseBullet(GameObject bullet, float delay = 0)
     {
+        if (bullet == null)//nullチェック
+        {
+            Debug.LogWarning("破壊済みの弾を戻そうとした");
+            return;
+        }
+        // もしディレイを適用したい場合は await で待機します
+        if (delay > 0)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(delay));
+        }
+
+        // プールに弾を戻す
         bulletPool.Release(bullet);
     }
+
 }

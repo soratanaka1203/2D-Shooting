@@ -168,8 +168,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5292581433481256646}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.11, y: 5.88, z: 0}
-  m_LocalScale: {x: 6.042621, y: 6.042621, z: 6.042621}
+  m_LocalPosition: {x: 0, y: 25, z: 0}
+  m_LocalScale: {x: 32.10686, y: 32.10686, z: 32.10686}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5292581433187907431}
@@ -219,7 +219,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4d0f2f75d4630274fa406de64e719d5d, type: 3}
-  m_Color: {r: 0.8962264, g: 0.2739409, b: 0.2739409, a: 1}
+  m_Color: {r: 0.9127708, g: 0.700356, b: 0.9716981, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -259,10 +259,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 1000
   moveSpeed: 2
-  bulletPrefab: {fileID: 1973797488871700, guid: 48e06088b7e195f40898a828bd389ec3, type: 3}
+  enemyBulletPool: {fileID: 0}
   firePoint: {fileID: 5292581433520224835}
   fireInterval: 2
+  bulletSpeed: 5
   phaseChangeHealthThreshold: 0.5
+  effectPool: {fileID: 0}
+  scoreText: {fileID: 0}
+  gameClearUI: {fileID: 0}
+  EnemySpawner: {fileID: 0}
 --- !u!1 &5292581433520224832
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,7 +292,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5292581433520224832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.197, z: 0}
+  m_LocalPosition: {x: 0, y: -0.301, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
