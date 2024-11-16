@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 629058137152168755}
-  - component: {fileID: 629058137152168754}
+  - component: {fileID: 7504532189080968762}
   m_Layer: 0
   m_Name: EnemyBulletPool
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &629058137152168754
+--- !u!114 &7504532189080968762
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 629058137152168764}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 852656f5acdc6944290cda013ccedd06, type: 3}
+  m_Script: {fileID: 11500000, guid: 4db1feda032c82e4490d434b2f293530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1973797488871700, guid: 48e06088b7e195f40898a828bd389ec3, type: 3}

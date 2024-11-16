@@ -1,17 +1,19 @@
-using UnityEngine;
-using UnityEngine.Pool;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Pool;
 
-public class BulletPool : MonoBehaviour
+public class EnemyBulletPool : MonoBehaviour
 {
     [SerializeField] private GameObject bulletPrefab; // 弾のプレハブ
-    private ObjectPool<GameObject> bulletPool; // 弾のプール
+    private ObjectPool<GameObject> enemyBulletPool; // 弾のプール
 
     void Start()
     {
         // 弾のオブジェクトプールを初期化
-        bulletPool = new ObjectPool<GameObject>(
+        enemyBulletPool = new ObjectPool<GameObject>(
             createFunc: () => Instantiate(bulletPrefab), // 新しい弾を生成する関数
             actionOnGet: bullet =>
             {
@@ -44,15 +46,15 @@ public class BulletPool : MonoBehaviour
             },
             collectionCheck: false, // コレクションチェックをオフ
             defaultCapacity: 50, // 初期容量
-            maxSize: 200 // 最大サイズ
+            maxSize: 100 // 最大サイズ
         );
     }
 
     // プールから弾を取り出す
-    public GameObject GetBullet()
+    public GameObject GetEnemyBullet()
     {
-        Debug.Log($"プール内の弾の数: {bulletPool.CountAll}"); // プール内の弾の数を表示
-        var bullet = bulletPool.Get();
+        Debug.Log($"プール内の弾の数: {enemyBulletPool.CountAll}"); // プール内の弾の数を表示
+        var bullet = enemyBulletPool.Get();
         if (bullet == null)
         {
             Debug.LogError("弾を取得できませんでした。プールの状態を確認してください。");
@@ -64,7 +66,7 @@ public class BulletPool : MonoBehaviour
 
 
     // プールに弾を戻す
-    public async UniTaskVoid ReleaseBullet(GameObject bullet, float delay = 0)
+    public async UniTaskVoid ReleaseEnemyBullet(GameObject bullet, float delay = 0)
     {
         if (bullet == null) // nullチェック
         {
@@ -80,7 +82,6 @@ public class BulletPool : MonoBehaviour
 
         // プールに弾を戻す
         Debug.Log("弾をプールに戻します: " + bullet.name); // ここを追加
-        bulletPool.Release(bullet); // 弾をプールに戻す
+        enemyBulletPool.Release(bullet); // 弾をプールに戻す
     }
-
 }

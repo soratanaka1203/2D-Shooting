@@ -583,18 +583,6 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1770240603}
         m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
-        m_MethodName: InitializeBoss
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1770240603}
-        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
         m_MethodName: ResetSpawner
         m_Mode: 1
         m_Arguments:
@@ -730,18 +718,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1482122636}
         m_TargetAssemblyTypeName: SceneManager, Assembly-CSharp
         m_MethodName: LoadThisScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1770240603}
-        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
-        m_MethodName: InitializeBoss
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1154,18 +1130,6 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1770240603}
         m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
-        m_MethodName: InitializeBoss
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1770240603}
-        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
         m_MethodName: ResetSpawner
         m_Mode: 1
         m_Arguments:
@@ -1491,6 +1455,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5292581433187907428, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5292581433481256640, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1508,6 +1476,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 56324840}
     - target: {fileID: 5292581433481256642, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
+      propertyPath: bulletSpeed
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292581433481256642, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
       propertyPath: gameClearUI
       value: 
       objectReference: {fileID: 486786242}
@@ -1518,7 +1490,7 @@ PrefabInstance:
     - target: {fileID: 5292581433481256642, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
       propertyPath: enemyBulletPool
       value: 
-      objectReference: {fileID: 1303630449}
+      objectReference: {fileID: 629058135393964332}
     - target: {fileID: 5292581433481256642, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
       propertyPath: playerBulletPool
       value: 
@@ -1572,8 +1544,16 @@ PrefabInstance:
       value: Boss
       objectReference: {fileID: 0}
     - target: {fileID: 5292581433481256646, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292581433481256646, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292581433520224832, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b31b9a70d9b527b488e8193f7ddca002, type: 3}
@@ -2396,17 +2376,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollSpeed: 0.1
---- !u!114 &1303630449 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 629058137152168754, guid: f500e5f33c0dec248b16f7bad7625f72, type: 3}
-  m_PrefabInstance: {fileID: 629058135393964331}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 852656f5acdc6944290cda013ccedd06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1379242646
 GameObject:
   m_ObjectHideFlags: 0
@@ -2879,18 +2848,6 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1770240603}
         m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
-        m_MethodName: InitializeBoss
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1770240603}
-        m_TargetAssemblyTypeName: EnemySpawner, Assembly-CSharp
         m_MethodName: ResetSpawner
         m_Mode: 1
         m_Arguments:
@@ -3103,6 +3060,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f500e5f33c0dec248b16f7bad7625f72, type: 3}
+--- !u!114 &629058135393964332 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7504532189080968762, guid: f500e5f33c0dec248b16f7bad7625f72, type: 3}
+  m_PrefabInstance: {fileID: 629058135393964331}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db1feda032c82e4490d434b2f293530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6990060125024828816
 PrefabInstance:
   m_ObjectHideFlags: 0

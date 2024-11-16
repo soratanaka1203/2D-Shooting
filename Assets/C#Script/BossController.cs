@@ -1,184 +1,271 @@
 using Cysharp.Threading.Tasks;
+using MyNameSpace;
 using System;
 using TMPro;
 using UnityEngine;
-using MyNameSpace;
+using UnityEngine.UI;
 
 public class BossController : MonoBehaviour
 {
-    // ボスの最大体力
-    public int maxHealth = 400;
-    private int currentHealth;          // 現在の体力
+    public int maxHealth = 400;                 // ボスの最大体力
+    private int currentHealth;                  // ボスの現在の体力
+    public float moveSpeed = 2.0f;              // ボスの移動速度
 
-    // ボスの移動速度
-    public float moveSpeed = 2.0f;
-
-    // ボスが発射する弾のプレハブ
-    [SerializeField] private BulletPool enemyBulletPool;
-    public Transform firePoint;         // 弾を発射する位置
-    public float fireInterval = 1.5f;   // 弾を発射する間隔
-    public float bulletSpeed = 20f;     // 弾の速度
+    [SerializeField] private EnemyBulletPool enemyBulletPool;  // 弾のプール
+    public Transform firePoint;                 // 弾を発射する位置
+    public float bulletSpeed = 20f;             // 弾の速度
     public float phaseChangeHealthThreshold = 0.5f;  // フェーズ変更の体力割合 (50%)
 
-    //プレイヤーの弾のプレハブ
-    [SerializeField] private BulletPool playerBulletPool;
+    [SerializeField] private BulletPool playerBulletPool;     // プレイヤー弾のプール
+    [SerializeField] private EffectPool effectPool;           // エフェクトプール
 
-    // エフェクトプール
-    [SerializeField] EffectPool effectPool;
+    [SerializeField] private TextMeshProUGUI scoreText;       // スコア表示用テキスト
+    [SerializeField] private GameObject gameClearUI;          // ゲームクリアのUI
+    [SerializeField] private GameObject EnemySpawner;         // 敵スポナーの参照
 
-    // UI要素
-    [SerializeField] TextMeshProUGUI scoreText;   // スコア表示用テキスト
-    [SerializeField] GameObject gameClearUI;       // ゲームクリアのUI
-
-    [SerializeField] GameObject EnemySpawner;       // 敵スポナーの参照
-
-    private bool isDead = false;                    // ボスが死亡しているかのフラグ
-    private bool isPhaseChanged = false;            // フェーズが変更されたかのフラグ
+    private bool isDead = false;                // ボスが死亡しているかのフラグ
+    private bool isPhaseChanged = false;        // フェーズが変更されたかのフラグ
+    private int currentPhase = 1;               // 現在のフェーズ
 
     void Start()
     {
-        // 各コンポーネントの初期設定
-        if (enemyBulletPool == null)
-        {
-            enemyBulletPool = GameObject.Find("EnemyBulletPool").GetComponent<BulletPool>();
-        }
-        if (effectPool == null)
-        {
-            effectPool = GameObject.Find("EffectPool").GetComponent<EffectPool>();
-        }
-        if (playerBulletPool == null)
-        {
-            playerBulletPool = GameObject.Find("PlayerBulletPool").GetComponentInChildren<BulletPool>();
-        }
-        if (scoreText == null)
-        {
-            scoreText = GameObject.Find("scoreText").GetComponentInChildren<TextMeshProUGUI>();
-        }
-        if (gameClearUI == null)
-        {
-            gameClearUI = GameObject.Find("GameClearUI");
-        }
-        if (EnemySpawner == null)
-        {
-            EnemySpawner = GameObject.Find("EnemySpawner");
-        }
+        // 各オブジェクトやコンポーネントの取得
+        if (enemyBulletPool == null) enemyBulletPool = GameObject.Find("EnemyBulletPool").GetComponent<EnemyBulletPool>();
+        if (effectPool == null) effectPool = GameObject.Find("EffectPool").GetComponent<EffectPool>();
+        if (playerBulletPool == null) playerBulletPool = GameObject.Find("PlayerBulletPool").GetComponentInChildren<BulletPool>();
+        if (scoreText == null) scoreText = GameObject.Find("scoreText").GetComponentInChildren<TextMeshProUGUI>();
+        if (gameClearUI == null) gameClearUI = GameObject.Find("GameClearUI");
+        if (EnemySpawner == null) EnemySpawner = GameObject.Find("EnemySpawner");
 
-        // 敵スポナーを非アクティブにする
-        EnemySpawner.SetActive(false);
-        currentHealth = maxHealth; // 現在の体力を最大体力で初期化
-        InvokeRepeating("Fire", fireInterval, fireInterval); // 定期的に弾を発射
+        EnemySpawner.SetActive(false); // 敵スポナーを非アクティブ化
+        currentHealth = maxHealth;     // 現在の体力を初期化
+
+        InvokeRepeating("ExecuteAttackPattern", 1f, 2.3f); // 2.3秒ごとに攻撃パターンを実行
     }
 
     void Update()
     {
-        // ボスが死亡していない場合の更新処理
-        if (!isDead)
+        if (!isDead) // ボスが生存している場合のみ更新
         {
-            Move(); // ボスの移動を更新
+            Move();  // ボスの移動処理
 
-            // 体力が50%以下になったらフェーズを変更
+            // 体力が閾値を下回り、まだフェーズ変更していない場合
             if (currentHealth <= maxHealth * phaseChangeHealthThreshold && !isPhaseChanged)
             {
-                ChangePhase(); // フェーズを変更
-                EnemySpawner?.SetActive(true); // 敵スポナーをアクティブにする
+                ChangePhase(2);           // フェーズ変更
+                EnemySpawner?.SetActive(true);  // 敵スポナーをアクティブ化
             }
         }
     }
 
-    // 弾が当たったらダメージを与える処理
+    // プレイヤーの弾との衝突を検知し、ダメージ処理を行う
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("PlayerBullet")) // プレイヤーの弾と衝突した場合
+        if (collision.gameObject.CompareTag("PlayerBullet")) // プレイヤー弾との衝突判定
         {
-            TakeDamage(1, collision.gameObject); // ダメージを受ける
-            //playerBulletPool.ReleaseBullet(collision.gameObject);
-            UpdateScore(200); // スコアを加算
+            TakeDamage(1, collision.gameObject);  // ダメージを受ける
+            playerBulletPool.ReleaseBullet(collision.gameObject); // 弾をプールに戻す
+            UpdateScore(200); // スコアを更新
         }
     }
 
     // ボスの移動パターン (例: 左右にスムーズに移動)
     void Move()
     {
-        float moveX = Mathf.Sin(Time.time * moveSpeed) * 30.0f;  // 左右にスムーズに移動
+        float moveX = Mathf.Sin(Time.time * moveSpeed) * 30.0f; // 左右にスムーズに移動
         transform.position = new Vector3(moveX, transform.position.y, transform.position.z);
     }
 
-    // ボスが弾を発射する処理
-    void Fire()
+    // 攻撃パターンをランダムに実行する
+    void ExecuteAttackPattern()
     {
-        GameObject enemyBullet = enemyBulletPool.GetBullet(); // 弾をプールから取得
-        enemyBullet.transform.position = firePoint.position; // 弾の位置を設定
-        enemyBullet.transform.rotation = Quaternion.identity; // 弾の回転を初期化
-
-        Rigidbody2D eBulletRb = enemyBullet.GetComponent<Rigidbody2D>(); // リジットボディを取得
-        eBulletRb.velocity = Vector2.zero; // 前回の動きをリセット
-        eBulletRb.velocity = new Vector2(0f, bulletSpeed); // 弾の速度を設定
-
-        // 弾を一定時間後にプールに戻す
-        enemyBulletPool.ReleaseBullet(enemyBullet, 3f);
+        switch (UnityEngine.Random.Range(1,5))
+        {
+            case 1:
+                FireStraight(); // 直線攻撃
+                Debug.Log("直接攻撃");
+                break;
+            case 2:
+                FireFanPattern(); // 扇状の攻撃
+                Debug.Log("扇状の攻撃");
+                break;
+            case 3:
+                StartFireCircularPattern(); //乱射
+                Debug.Log("乱射攻撃");
+                break;
+            case 4:
+                FireBig();   //大きい弾の攻撃
+                Debug.Log("大攻撃");
+                break;
+            default:
+                FireStraight();
+                break;
+        }
     }
 
-    // ボスのダメージ処理
+    // 直線に弾を発射するパターン
+    async void FireStraight()
+    {
+        int bulletCount = 4;
+        for (int i = 0; i < bulletCount; i++)
+        {
+            GameObject bullet = enemyBulletPool.GetEnemyBullet(); // 弾をプールから取得
+            bullet.transform.position = firePoint.position;
+            bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -bulletSpeed); // 下向きに発射
+            enemyBulletPool.ReleaseEnemyBullet(bullet, 3f); // 一定時間後にプールに戻す
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1));  // 0.1秒間待機
+        }
+    }
+
+    // 扇状に複数の弾を発射するパターン
+    void FireFanPattern()
+    {
+        int bulletsCount = 6;                // 発射する弾数
+        float angleStep = 45f / (bulletsCount - 1); // 弾の角度ステップ
+        float startAngle = -18f;            // 開始角度
+
+        for (int i = 0; i < bulletsCount; i++)
+        {
+            GameObject bullet = enemyBulletPool.GetEnemyBullet();
+            bullet.transform.position = firePoint.position;
+
+            // 弾の発射方向を設定
+            float angle = startAngle + angleStep * i;
+            Vector2 direction = new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad), -Mathf.Cos(angle * Mathf.Deg2Rad));
+            bullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed / 2;
+
+            enemyBulletPool.ReleaseEnemyBullet(bullet, 3f);
+        }
+    }
+
+    //間隔をあける
+    void StartFireCircularPattern()
+    {
+        int bulletCount = 20;
+        float angleStep = -180f / bulletCount;
+
+        // 発射するタイミングをずらして弾を出す
+        for (int i = 0; i < bulletCount; i++)
+        {
+            float delay = i * 0.1f; // 0.1秒ずつ遅らせて発射
+            Invoke("FireBullet", delay); // FireBulletメソッドを遅延させて呼び出す
+        }
+    }
+    //乱射する
+    void FireBullet()
+    {
+        // 弾をプールから取得
+        GameObject bullet = enemyBulletPool.GetEnemyBullet();
+        if (bullet != null)
+        {
+            bullet.transform.position = firePoint.position;
+
+            // 円周上の位置を計算
+            float angle = UnityEngine.Random.Range(0f, -180f);
+            float angleInRadians = Mathf.Deg2Rad * angle;
+
+            Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians));
+
+            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+            bulletRb.velocity = direction * bulletSpeed / 2;
+
+            // 弾をプールに戻すタイミング（例：3秒後）
+            enemyBulletPool.ReleaseEnemyBullet(bullet, 3f);
+        }
+    }
+
+    // でかい弾
+    void FireBig()
+    {
+        GameObject player = GameObject.FindWithTag("Player"); // プレイヤーの取得
+
+        // プレイヤーが存在する場合にのみ発射処理を行う
+        if (player != null)
+        {
+            
+            
+            GameObject bullet = enemyBulletPool.GetEnemyBullet(); // 弾をプールから取得
+            bullet.transform.localScale = new Vector3(3, 3, 3);   //弾のスケールを大きくする
+
+            if (bullet != null)
+            {
+                bullet.transform.position = firePoint.position;
+                bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -bulletSpeed - 30); // 下向きに発射
+                enemyBulletPool.ReleaseEnemyBullet(bullet, 3f); // 一定時間後にプールに戻す
+            }
+            else
+            {
+                Debug.LogError("弾の取得に失敗しました。");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("プレイヤーが見つかりません。");
+        }
+    }
+
+
+
+
+    // ボスのフェーズが変更されたときの処理
+    void ChangePhase(int newPhase)
+    {
+        currentPhase = newPhase;  // フェーズを更新
+        isPhaseChanged = true;    // フェーズ変更フラグを設定
+        Debug.Log("ボスのフェーズが変更されました！");
+
+        // フェーズ変更時の強化処理
+        moveSpeed += 1.0f;  // 移動速度を速くする
+        bulletSpeed += 5f;  // 弾の速度を速くする
+
+        // 発射間隔を更新
+        CancelInvoke(); // 既存のInvokeをキャンセル
+        InvokeRepeating("ExecuteAttackPattern", 1f, Mathf.Max(0.5f, 3f - currentPhase)); // 新しい間隔で発射
+    }
+
+    // ボスがダメージを受けた際の処理
     public void TakeDamage(int damageAmount, GameObject gameObject)
     {
         currentHealth -= damageAmount; // 現在の体力を減少
         PlayEffect(gameObject.transform, 0.2f).Forget(); // ヒットエフェクトを再生
 
-        Debug.Log($"ボスが{damageAmount}のダメージを受けました。現在のヘルス: {currentHealth}");
-
-        // 体力が0以下になったら死亡処理を行う
-        if (currentHealth <= 0 && !isDead)
+        if (currentHealth <= 0 && !isDead) // 体力が0以下になったら死亡処理
         {
-            Die(); // 死亡処理を実行
+            Die();
         }
     }
 
-    // ボスが倒れたときの処理
+    // ボスが死亡したときの処理
     void Die()
     {
-        isDead = true; // 死亡フラグを立てる
-        // ボスを倒した時のエフェクトを再生
+        isDead = true;
         for (int i = 0; i < 15; i++)
         {
-            Transform tr = new GameObject().transform; // 新しい一時的なオブジェクトのTransformを作成
-            tr.position = new Vector3(UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5), 0); // ランダムな位置に設定
-            PlayEffect(tr, 2f).Forget(); // エフェクトを再生
+            // エフェクトをランダム位置に表示
+            Transform tr = new GameObject().transform;
+            tr.position = new Vector3(UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5), 0);
+            PlayEffect(tr, 2f).Forget();
         }
         gameObject.SetActive(false); // ボスを非アクティブ化
-        UpdateScore(100000); // スコアを加算
+        UpdateScore(100000);         // スコアを加算
         gameClearUI.SetActive(true); // ゲームクリアのUIを表示
-    }
-
-    // ボスのフェーズが変更されたときの処理
-    void ChangePhase()
-    {
-        isPhaseChanged = true; // フェーズ変更フラグを立てる
-        Debug.Log("ボスのフェーズが変更されました！");
-
-        // フェーズ変更時にボスの挙動を変化させる
-        moveSpeed += 1.0f;  // 移動速度を速くする
-        fireInterval -= 0.5f;  // 弾を発射する間隔を短くする
-
-        // 発射間隔を更新
-        CancelInvoke(); // 既存のInvokeをキャンセル
-        InvokeRepeating("Fire", fireInterval, fireInterval); // 新しい間隔で弾を発射
     }
 
     // ヒットエフェクトを表示
     async UniTaskVoid PlayEffect(Transform effectTransform, float delay)
     {
         GameObject effect = effectPool.GetEffect(); // エフェクトを取得
-        effect.transform.position = effectTransform.position; // エフェクトの位置を設定
+        effect.transform.position = effectTransform.position; // エフェクト位置設定
 
-        // 一定時間待ってからエフェクトをプールに戻す
+        // 一定時間後にエフェクトをプールに戻す
         await UniTask.Delay(TimeSpan.FromSeconds(delay));
-        effectPool.ReleaseEffect(effect); // エフェクトをプールに戻す
+        effectPool.ReleaseEffect(effect);
     }
 
-    // スコアを更新するメソッド
+    // スコアの更新
     private void UpdateScore(int amount)
     {
-        ScoreManager.Instance.AddScore(amount); // スコアを加算
-        ScoreManager.Instance.SetDisplayScore(scoreText); // スコアをUIに表示
+        ScoreManager.Instance.AddScore(amount);         // スコアを加算
+        ScoreManager.Instance.SetDisplayScore(scoreText); // スコアテキストを更新
     }
 }
