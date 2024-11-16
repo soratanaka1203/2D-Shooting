@@ -21,6 +21,7 @@ public class BossController : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI scoreText;       // スコア表示用テキスト
     [SerializeField] private GameObject gameClearUI;          // ゲームクリアのUI
+    [SerializeField] private Slider healthBar;                //ボスの体力バー
     [SerializeField] private GameObject EnemySpawner;         // 敵スポナーの参照
 
     private bool isDead = false;                // ボスが死亡しているかのフラグ
@@ -38,7 +39,9 @@ public class BossController : MonoBehaviour
         if (EnemySpawner == null) EnemySpawner = GameObject.Find("EnemySpawner");
 
         EnemySpawner.SetActive(false); // 敵スポナーを非アクティブ化
-        currentHealth = maxHealth;     // 現在の体力を初期化
+        healthBar.gameObject.SetActive(true);//体力バーを表示
+        healthBar.value = maxHealth;  // 現在の体力を初期化
+        currentHealth = maxHealth;     
 
         InvokeRepeating("ExecuteAttackPattern", 1f, 2.3f); // 2.3秒ごとに攻撃パターンを実行
     }
@@ -79,7 +82,7 @@ public class BossController : MonoBehaviour
     // 攻撃パターンをランダムに実行する
     void ExecuteAttackPattern()
     {
-        switch (UnityEngine.Random.Range(1,5))
+        switch (UnityEngine.Random.Range(1,4))
         {
             case 1:
                 FireStraight(); // 直線攻撃
@@ -92,10 +95,6 @@ public class BossController : MonoBehaviour
             case 3:
                 StartFireCircularPattern(); //乱射
                 Debug.Log("乱射攻撃");
-                break;
-            case 4:
-                FireBig();   //大きい弾の攻撃
-                Debug.Log("大攻撃");
                 break;
             default:
                 FireStraight();
@@ -174,39 +173,6 @@ public class BossController : MonoBehaviour
         }
     }
 
-    // でかい弾
-    void FireBig()
-    {
-        GameObject player = GameObject.FindWithTag("Player"); // プレイヤーの取得
-
-        // プレイヤーが存在する場合にのみ発射処理を行う
-        if (player != null)
-        {
-            
-            
-            GameObject bullet = enemyBulletPool.GetEnemyBullet(); // 弾をプールから取得
-            bullet.transform.localScale = new Vector3(3, 3, 3);   //弾のスケールを大きくする
-
-            if (bullet != null)
-            {
-                bullet.transform.position = firePoint.position;
-                bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -bulletSpeed - 30); // 下向きに発射
-                enemyBulletPool.ReleaseEnemyBullet(bullet, 3f); // 一定時間後にプールに戻す
-            }
-            else
-            {
-                Debug.LogError("弾の取得に失敗しました。");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("プレイヤーが見つかりません。");
-        }
-    }
-
-
-
-
     // ボスのフェーズが変更されたときの処理
     void ChangePhase(int newPhase)
     {
@@ -228,6 +194,7 @@ public class BossController : MonoBehaviour
     {
         currentHealth -= damageAmount; // 現在の体力を減少
         PlayEffect(gameObject.transform, 0.2f).Forget(); // ヒットエフェクトを再生
+        UpdateHealthBar();//体力バーを更新
 
         if (currentHealth <= 0 && !isDead) // 体力が0以下になったら死亡処理
         {
@@ -267,5 +234,14 @@ public class BossController : MonoBehaviour
     {
         ScoreManager.Instance.AddScore(amount);         // スコアを加算
         ScoreManager.Instance.SetDisplayScore(scoreText); // スコアテキストを更新
+    }
+
+    //体力バーの更新
+    private void UpdateHealthBar()
+    {
+        if (healthBar != null)
+        {
+            healthBar.value = (float)currentHealth / maxHealth;
+        }
     }
 }
