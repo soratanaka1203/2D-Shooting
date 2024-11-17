@@ -62,12 +62,11 @@ public class BossController : MonoBehaviour
     }
 
     // プレイヤーの弾との衝突を検知し、ダメージ処理を行う
-    private void OnCollisionEnter2D(Collision2D collision)
+    private async void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("PlayerBullet")) // プレイヤー弾との衝突判定
+        if (collision.gameObject.tag == "PlayerBullet") // プレイヤー弾との衝突判定
         {
             TakeDamage(1, collision.gameObject);  // ダメージを受ける
-            playerBulletPool.ReleaseBullet(collision.gameObject); // 弾をプールに戻す
             UpdateScore(200); // スコアを更新
         }
     }
@@ -206,11 +205,13 @@ public class BossController : MonoBehaviour
     void Die()
     {
         isDead = true;
+        // 攻撃パターンを停止
+        CancelInvoke("ExecuteAttackPattern");
         for (int i = 0; i < 15; i++)
         {
             // エフェクトをランダム位置に表示
             Transform tr = new GameObject().transform;
-            tr.position = new Vector3(UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5), 0);
+            tr.position = gameObject.transform.position + new Vector3(UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5), 0);
             PlayEffect(tr, 2f).Forget();
         }
         gameObject.SetActive(false); // ボスを非アクティブ化
@@ -219,7 +220,7 @@ public class BossController : MonoBehaviour
     }
 
     // ヒットエフェクトを表示
-    async UniTaskVoid PlayEffect(Transform effectTransform, float delay)
+    async UniTask PlayEffect(Transform effectTransform, float delay)
     {
         GameObject effect = effectPool.GetEffect(); // エフェクトを取得
         effect.transform.position = effectTransform.position; // エフェクト位置設定

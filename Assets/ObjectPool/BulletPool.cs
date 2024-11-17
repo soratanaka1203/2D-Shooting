@@ -25,10 +25,7 @@ public class BulletPool : MonoBehaviour
                 if (bullet != null)
                 {
                     bullet.SetActive(false); // 弾を非アクティブにする
-                }
-                else
-                {
-                    Debug.LogWarning("破棄済みの弾をプールに戻そうとしました。"); // 警告メッセージ
+                    Debug.Log("弾を非アクティブにして戻す");
                 }
             },
             actionOnDestroy: bullet =>
@@ -37,21 +34,16 @@ public class BulletPool : MonoBehaviour
                 {
                     Destroy(bullet); // 弾を破壊
                 }
-                else
-                {
-                    Debug.LogWarning("破棄済みの弾を破壊しようとしました。"); // 警告メッセージ
-                }
             },
             collectionCheck: false, // コレクションチェックをオフ
             defaultCapacity: 50, // 初期容量
-            maxSize: 200 // 最大サイズ
+            maxSize: 250 // 最大サイズ
         );
     }
 
     // プールから弾を取り出す
     public GameObject GetBullet()
     {
-        Debug.Log($"プール内の弾の数: {bulletPool.CountAll}"); // プール内の弾の数を表示
         var bullet = bulletPool.Get();
         if (bullet == null)
         {
@@ -62,25 +54,24 @@ public class BulletPool : MonoBehaviour
 
 
 
-
-    // プールに弾を戻す
-    public async UniTaskVoid ReleaseBullet(GameObject bullet, float delay = 0)
+    //プールに返却する
+    public async UniTask ReleaseBullet(GameObject bullet, float delay = 0)
     {
-        if (bullet == null) // nullチェック
+        if (bullet == null)
         {
             Debug.LogWarning("破壊済みの弾を戻そうとした");
-            return; // 処理を終了
+            return;
         }
 
-        // ディレイが指定されている場合、待機
         if (delay > 0)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(delay)); // 指定された秒数待機
+            await UniTask.Delay(TimeSpan.FromSeconds(delay)); // 弾が待機時間後にプールに戻る
         }
 
-        // プールに弾を戻す
-        Debug.Log("弾をプールに戻します: " + bullet.name); // ここを追加
-        bulletPool.Release(bullet); // 弾をプールに戻す
+        bullet.SetActive(false);
+        bulletPool.Release(bullet); // プールに戻す
+        Debug.Log($"弾がプールに戻されました。プール内の弾の数: {bulletPool.CountAll}");
     }
+
 
 }

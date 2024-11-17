@@ -53,7 +53,6 @@ public class EnemyBulletPool : MonoBehaviour
     // プールから弾を取り出す
     public GameObject GetEnemyBullet()
     {
-        Debug.Log($"プール内の弾の数: {enemyBulletPool.CountAll}"); // プール内の弾の数を表示
         var bullet = enemyBulletPool.Get();
         if (bullet == null)
         {
@@ -66,7 +65,7 @@ public class EnemyBulletPool : MonoBehaviour
 
 
     // プールに弾を戻す
-    public async UniTaskVoid ReleaseEnemyBullet(GameObject bullet, float delay = 0)
+    public async UniTask ReleaseEnemyBullet(GameObject bullet, float delay = 0)
     {
         if (bullet == null) // nullチェック
         {
@@ -81,7 +80,6 @@ public class EnemyBulletPool : MonoBehaviour
         }
 
         // プールに弾を戻す
-        Debug.Log("弾をプールに戻します: " + bullet.name); // ここを追加
-        enemyBulletPool.Release(bullet); // 弾をプールに戻す
+        enemyBulletPool.Release(bullet); 
     }
 }

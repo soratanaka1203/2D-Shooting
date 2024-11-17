@@ -78,8 +78,8 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    // ’e‚ª“–‚½‚Á‚½‚Ìˆ—
-    private void OnCollisionEnter2D(Collision2D collision)
+    // ’e‚â“G‚ª“–‚½‚Á‚½‚Ìˆ—
+    /*private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
@@ -92,7 +92,7 @@ public class PlayerControl : MonoBehaviour
             enemySpawner.SetActive(false); // “G‚ÌƒXƒ|ƒi[‚ğ”ñƒAƒNƒeƒBƒu‰»
             audioPlayer.PlayAudio(dethSe, volum); // €–S‚Ì‰¹‚ğÄ¶
         }
-    }
+    }*/
 
     // ’e‚ğ‘Å‚Â
     private async UniTaskVoid Shot()
@@ -120,12 +120,5 @@ public class PlayerControl : MonoBehaviour
         bulletRB.velocity = new Vector2(0f, bulletSpeed); // ’e‚Ì‘¬“x‚ğİ’è
 
         audioPlayer.PlayAudio(shotSe, volum); // ’e”­Ë‰¹‚ğÄ¶
-
-        // ’e‚ªActive‚¾‚Á‚½‚ç
-        if (bulletGB)
-        {
-            // 2•bŒã‚É’e‚ğƒv[ƒ‹‚É–ß‚·
-            bulletPool.ReleaseBullet(bulletGB, 1.5f);
-        }
     }
 }
