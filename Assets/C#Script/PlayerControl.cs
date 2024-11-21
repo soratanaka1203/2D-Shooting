@@ -4,6 +4,8 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using MyNameSpace;
+using Unity.VisualScripting;
+using TMPro;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] GameObject shotPoint; // 弾を発射する位置
     [SerializeField] BulletPool bulletPool; // 弾のプール
     public float bulletSpeed = 300f; // 弾の速度
+    public int bulletCount = 1; // 発射する弾の数
     float fireRate = 0.1f; // 発射間隔
     float nextFireTime = 0f; // 次の発射時間
 
@@ -30,12 +33,18 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] GameObject gameOverUi; // ゲームオーバーUI
     [SerializeField] GameObject enemySpawner; // 敵のスポナー
 
+    [SerializeField] TextMeshProUGUI ResultGameOver;
+
+    private bool isShield = false;
+    public GameObject shieldObject; // シールドのプレハブまたは子オブジェクト
+
     void Start()
     {
         // ゲームオーバーUIを非表示に設定
         gameOverUi.SetActive(false);
         // 敵のスポナーをアクティブに設定
         enemySpawner.SetActive(true);
+        shieldObject.SetActive(false);
         rb = GetComponent<Rigidbody2D>(); // Rigidbody2Dを取得
 
         // 弾のプールが設定されていなければ探して取得
@@ -79,20 +88,29 @@ public class PlayerControl : MonoBehaviour
     }
 
     // 弾や敵が当たった時の処理
-    /*private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
-            Destroy(gameObject); // プレイヤーを破棄
-            ScoreManager.Instance.SetRanking(ScoreManager.Instance.score); // スコアをランキングにセット
-            ScoreManager.Instance.ResetScore(); // スコアをリセット
+            if (isShield)
+            {
+                SetShiled(false);
+            }
+            else
+            {
+                
+                ScoreManager.Instance.SetDisplayScore(ResultGameOver);//結果を表示
+                ScoreManager.Instance.SetRanking(ScoreManager.Instance.score); // スコアをランキングにセット
+                ScoreManager.Instance.ResetScore(); // スコアをリセット
 
-            // ゲームオーバーUIを表示
-            gameOverUi.SetActive(true);
-            enemySpawner.SetActive(false); // 敵のスポナーを非アクティブ化
-            audioPlayer.PlayAudio(dethSe, volum); // 死亡時の音を再生
+                // ゲームオーバーUIを表示
+                gameOverUi.SetActive(true);
+                enemySpawner.SetActive(false); // 敵のスポナーを非アクティブ化
+                audioPlayer.PlayAudio(dethSe, volum); // 死亡時の音を再生
+                Destroy(gameObject); // プレイヤーを破棄
+            }
         }
-    }*/
+    }
 
     // 弾を打つ
     private async UniTaskVoid Shot()
@@ -104,21 +122,49 @@ public class PlayerControl : MonoBehaviour
             return;
         }
 
-        // プールから弾丸を取得
-        var bulletGB = bulletPool.GetBullet();
-        if (bulletGB == null)
+        float spreadAngle = 15f; // 弾の拡散角度
+
+        for (int i = 0; i < bulletCount; i++)
         {
-            Debug.LogError("弾を取得できませんでした。");
-            return; // 弾が取得できない場合は終了
+            // プールから弾丸を取得
+            var bulletGB = bulletPool.GetBullet();
+            if (bulletGB == null)
+            {
+                Debug.LogError("弾を取得できませんでした。");
+                continue; // 次の弾を試す
+            }
+
+            // 発射位置と初期設定
+            bulletGB.transform.position = shotPoint.transform.position;
+
+            // 弾の角度を調整
+            float angle = -spreadAngle * (bulletCount - 1) / 2 + spreadAngle * i;
+            bulletGB.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+            var bulletRB = bulletGB.GetComponent<Rigidbody2D>();
+            bulletRB.velocity = Vector2.zero; // 前回の動きをリセット
+
+            // 発射方向を計算
+            Vector2 shotDirection = Quaternion.Euler(0, 0, angle) * Vector2.up;
+            bulletRB.velocity = shotDirection * bulletSpeed;
+
+            // 弾発射音を再生
+            audioPlayer.PlayAudio(shotSe, volum);
         }
+    }
 
-        bulletGB.transform.position = shotPoint.transform.position; // 発射位置を設定
-        bulletGB.transform.rotation = Quaternion.identity; // 初期の回転を設定
 
-        var bulletRB = bulletGB.GetComponent<Rigidbody2D>(); // Rigidbody2Dを取得
-        bulletRB.velocity = Vector2.zero; // 前回の動きをリセット
-        bulletRB.velocity = new Vector2(0f, bulletSpeed); // 弾の速度を設定
-
-        audioPlayer.PlayAudio(shotSe, volum); // 弾発射音を再生
+    //アイテムのシールド
+    public void SetShiled(bool value)
+    {
+        isShield = value;
+        if (isShield)
+        {
+            shieldObject.SetActive(true);
+        }
+        else
+        {
+            shieldObject.SetActive(false);
+        }
     }
 }

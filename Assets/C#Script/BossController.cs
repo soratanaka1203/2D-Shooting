@@ -21,8 +21,13 @@ public class BossController : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI scoreText;       // スコア表示用テキスト
     [SerializeField] private GameObject gameClearUI;          // ゲームクリアのUI
+    [SerializeField] private TextMeshProUGUI resultGameClearText;//リザルトテキスト
     [SerializeField] private Slider healthBar;                //ボスの体力バー
-    [SerializeField] private GameObject EnemySpawner;         // 敵スポナーの参照
+    [SerializeField] private GameObject enemySpawner;         // 敵スポナーの参照
+
+    [SerializeField] private AudioPlayer audioPlayer;
+    [SerializeField] private AudioClip audioClip;
+    public float volume;
 
     private bool isDead = false;                // ボスが死亡しているかのフラグ
     private bool isPhaseChanged = false;        // フェーズが変更されたかのフラグ
@@ -36,9 +41,9 @@ public class BossController : MonoBehaviour
         if (playerBulletPool == null) playerBulletPool = GameObject.Find("PlayerBulletPool").GetComponentInChildren<BulletPool>();
         if (scoreText == null) scoreText = GameObject.Find("scoreText").GetComponentInChildren<TextMeshProUGUI>();
         if (gameClearUI == null) gameClearUI = GameObject.Find("GameClearUI");
-        if (EnemySpawner == null) EnemySpawner = GameObject.Find("EnemySpawner");
+        if (enemySpawner == null) enemySpawner = GameObject.Find("EnemySpawner");
 
-        EnemySpawner.SetActive(false); // 敵スポナーを非アクティブ化
+        enemySpawner.SetActive(false); // 敵スポナーを非アクティブ化
         healthBar.gameObject.SetActive(true);//体力バーを表示
         healthBar.value = maxHealth;  // 現在の体力を初期化
         currentHealth = maxHealth;     
@@ -56,7 +61,7 @@ public class BossController : MonoBehaviour
             if (currentHealth <= maxHealth * phaseChangeHealthThreshold && !isPhaseChanged)
             {
                 ChangePhase(2);           // フェーズ変更
-                EnemySpawner?.SetActive(true);  // 敵スポナーをアクティブ化
+                enemySpawner?.SetActive(true);  // 敵スポナーをアクティブ化
             }
         }
     }
@@ -194,6 +199,7 @@ public class BossController : MonoBehaviour
         currentHealth -= damageAmount; // 現在の体力を減少
         PlayEffect(gameObject.transform, 0.2f).Forget(); // ヒットエフェクトを再生
         UpdateHealthBar();//体力バーを更新
+        audioPlayer.PlayAudio(audioClip, volume);
 
         if (currentHealth <= 0 && !isDead) // 体力が0以下になったら死亡処理
         {
@@ -211,12 +217,16 @@ public class BossController : MonoBehaviour
         {
             // エフェクトをランダム位置に表示
             Transform tr = new GameObject().transform;
-            tr.position = gameObject.transform.position + new Vector3(UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5), 0);
+            tr.position = gameObject.transform.position + new Vector3(UnityEngine.Random.Range(-10, 11), UnityEngine.Random.Range(-10, 11), 0);
             PlayEffect(tr, 2f).Forget();
+            audioPlayer.PlayAudio(audioClip, volume);
         }
+        enemySpawner.SetActive(false);
         gameObject.SetActive(false); // ボスを非アクティブ化
         UpdateScore(100000);         // スコアを加算
+        ScoreManager.Instance.SetDisplayScore(resultGameClearText);//結果を表示
         gameClearUI.SetActive(true); // ゲームクリアのUIを表示
+
     }
 
     // ヒットエフェクトを表示

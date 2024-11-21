@@ -66,8 +66,8 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            // スポーン開始から10秒経過したらボスを登場させる
-            if (Time.time - startTime >= 3)
+            // スポーン開始から90秒経過したらボスを登場させる
+            if (Time.time - startTime >= 90)
             {
                 if (!bossIs) // まだボスが登場していない場合
                 {

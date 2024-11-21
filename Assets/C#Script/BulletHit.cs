@@ -14,33 +14,35 @@ public class BulletHit : MonoBehaviour
     public BulletPool bulletPool;
     public EffectPool effectPool;
     public EnemyPool enemyPool;
+    public ItemPool itemPool; // アイテムプールの参照を追加
     public int enemyHp = 5;
 
-    public int scorePoint = 100; //敵を倒した時に得られるスコアのデフォルト値
-
-    [SerializeField] TextMeshProUGUI scoreText;
+    public int scorePoint = 100; // 敵を倒したときに得られるスコアのデフォルト値
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private float dropChance = 1f; // アイテムが出現する確率 (0.3 = 30%)
 
     private void Start()
     {
+        // 各プールやUIコンポーネントへの参照を取得
         if (bulletPool == null)
         {
-            bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();// BulletPoolへの参照
-            Debug.Log("バレット");
+            bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
         }
         if (effectPool == null)
         {
-            effectPool = GameObject.Find("EffectPool").GetComponent<EffectPool>();// EffectPoolへの参照
-            Debug.Log("エフェクト");
+            effectPool = GameObject.Find("EffectPool").GetComponent<EffectPool>();
         }
         if (enemyPool == null)
         {
-            enemyPool = GameObject.Find("EnemyPool").GetComponent<EnemyPool>();//EnemyPoolへの参照
-            Debug.Log("エネミープール");
+            enemyPool = GameObject.Find("EnemyPool").GetComponent<EnemyPool>();
+        }
+        if (itemPool == null)
+        {
+            itemPool = GameObject.Find("ItemPool").GetComponent<ItemPool>();
         }
         if (scoreText == null)
         {
             scoreText = GameObject.Find("scoreText").GetComponent<TextMeshProUGUI>();
-            Debug.Log("スコアテキスト");
         }
     }
 
@@ -63,6 +65,17 @@ public class BulletHit : MonoBehaviour
 
             if (enemyHp <= 0)
             {
+                // アイテムをドロップするか判定
+                if (itemPool != null && UnityEngine.Random.value < dropChance)
+                {
+                    string randomItemType = GetRandomItemType();
+                    GameObject item = itemPool.GetItem(randomItemType);
+                    if (item != null)
+                    {
+                        item.transform.position = transform.position; // 敵の位置にアイテムを配置
+                    }
+                }
+
                 // 敵をプールに戻す
                 enemyPool.ReleaseEnemy(gameObject);
                 enemyHp = 0; // 再度同じ敵が処理されないように
@@ -74,13 +87,17 @@ public class BulletHit : MonoBehaviour
         }
     }
 
-
     private async UniTaskVoid ReturnEffectToPool(GameObject effect, float delay)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(delay));
         effectPool.ReleaseEffect(effect);
     }
 
+    private string GetRandomItemType()
+    {
+        // ランダムにアイテムタイプを選択
+        string[] itemTypes = { "Score", "PlusBullet", "Shield" };
+        int randomIndex = UnityEngine.Random.Range(0, itemTypes.Length);
+        return itemTypes[randomIndex];
+    }
 }
-
-

@@ -48,6 +48,7 @@ public class BulletPool : MonoBehaviour
         if (bullet == null)
         {
             Debug.LogError("弾を取得できませんでした。プールの状態を確認してください。");
+            return null;
         }
         return bullet;
     }

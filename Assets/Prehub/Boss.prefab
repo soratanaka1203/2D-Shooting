@@ -267,8 +267,12 @@ MonoBehaviour:
   effectPool: {fileID: 0}
   scoreText: {fileID: 0}
   gameClearUI: {fileID: 0}
+  resultGameOverText: {fileID: 0}
   healthBar: {fileID: 0}
-  EnemySpawner: {fileID: 0}
+  enemySpawner: {fileID: 0}
+  audioPlayer: {fileID: 5292581433187907425}
+  audioClip: {fileID: 0}
+  volume: 5
 --- !u!1 &5292581433520224832
 GameObject:
   m_ObjectHideFlags: 0
