@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class BossController : MonoBehaviour
 {
+    public GameManager gameManager;
     public int maxHealth = 400;                 // ボスの最大体力
     private int currentHealth;                  // ボスの現在の体力
     public float moveSpeed = 2.0f;              // ボスの移動速度
@@ -115,7 +116,6 @@ public class BossController : MonoBehaviour
             GameObject bullet = enemyBulletPool.GetEnemyBullet(); // 弾をプールから取得
             bullet.transform.position = firePoint.position;
             bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -bulletSpeed); // 下向きに発射
-            enemyBulletPool.ReleaseEnemyBullet(bullet, 3f); // 一定時間後にプールに戻す
             await UniTask.Delay(TimeSpan.FromSeconds(0.1));  // 0.1秒間待機
         }
     }
@@ -136,8 +136,6 @@ public class BossController : MonoBehaviour
             float angle = startAngle + angleStep * i;
             Vector2 direction = new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad), -Mathf.Cos(angle * Mathf.Deg2Rad));
             bullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed / 2;
-
-            enemyBulletPool.ReleaseEnemyBullet(bullet, 3f);
         }
     }
 
@@ -171,9 +169,6 @@ public class BossController : MonoBehaviour
 
             Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
             bulletRb.velocity = direction * bulletSpeed / 2;
-
-            // 弾をプールに戻すタイミング（例：3秒後）
-            enemyBulletPool.ReleaseEnemyBullet(bullet, 3f);
         }
     }
 
@@ -226,6 +221,7 @@ public class BossController : MonoBehaviour
         UpdateScore(100000);         // スコアを加算
         ScoreManager.Instance.SetDisplayScore(resultGameClearText);//結果を表示
         gameClearUI.SetActive(true); // ゲームクリアのUIを表示
+        gameManager.OnGameClear();
 
     }
 

@@ -71,8 +71,8 @@ public class EnemySpawner : MonoBehaviour
             // 経過時間を更新。timeElapsedはスポーン間隔を考慮した経過時間
             timeElapsed += spawnInterval;
 
-            // ボスがまだ登場していないかつスポーン開始から90秒が経過した場合、ボスを登場させる
-            if (Time.time - startTime >= 90 && !bossIs)
+            // ボスがまだ登場していないかつスポーン開始から120秒が経過した場合、ボスを登場させる
+            if (Time.time - startTime >= 120 && !bossIs)
             {
                 // ボスの初期位置を設定（画面外に配置）
                 boss.transform.position = new Vector3(0, 40, 0);
@@ -128,6 +128,7 @@ public class EnemySpawner : MonoBehaviour
                             spriteRenderer.color = Color.magenta; // 敵の色を設定
                             enemyBH.scorePoint = Mathf.RoundToInt(200 * difficultyMultiplier);
                             enemyBH.enemyHp = Mathf.CeilToInt(4 * difficultyMultiplier);
+                            enemyControl.isShot = true;
                             break;
 
                         // 波状移動（新しく追加した移動パターン）
@@ -136,6 +137,7 @@ public class EnemySpawner : MonoBehaviour
                             spriteRenderer.color = Color.cyan; // 敵の色を設定
                             enemyBH.scorePoint = Mathf.RoundToInt(600 * difficultyMultiplier);
                             enemyBH.enemyHp = Mathf.CeilToInt(6 * difficultyMultiplier);
+                            enemyControl.isShot = true;
                             break;
                     }
                 }

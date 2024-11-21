@@ -95,9 +95,27 @@ public class BulletHit : MonoBehaviour
 
     private string GetRandomItemType()
     {
-        // ランダムにアイテムタイプを選択
-        string[] itemTypes = { "Score", "PlusBullet", "Shield" };
-        int randomIndex = UnityEngine.Random.Range(0, itemTypes.Length);
-        return itemTypes[randomIndex];
+        // 各アイテムタイプごとの出現確率（合計は100%）
+        float scoreChance = 0.6f;  // 50%の確率
+        float plusBulletChance = 0.2f;  // 30%の確率
+        float shieldChance = 0.2f;  // 20%の確率
+
+        // 0~1の範囲でランダムな値を生成
+        float randomValue = UnityEngine.Random.value;
+
+        // 確率に基づいてアイテムを選択
+        if (randomValue < scoreChance)
+        {
+            return "Score";
+        }
+        else if (randomValue < scoreChance + plusBulletChance)
+        {
+            return "PlusBullet";
+        }
+        else
+        {
+            return "Shield";
+        }
     }
+
 }

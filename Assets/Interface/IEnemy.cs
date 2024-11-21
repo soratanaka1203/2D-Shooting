@@ -56,14 +56,23 @@ public class WaveMovement : IMovement
     private float waveAmplitude = 2f; // 波の振幅
     private float elapsedTime = 0f; // 経過時間
 
+    // 中央位置（X軸）を設定
+    private float centerX = 0f;
+
     public void Move(Transform transform)
     {
         elapsedTime += Time.deltaTime;
 
-        // 垂直方向に前進しつつ、波状に横方向へ移動
+        // 横方向に波状の移動を行い、X軸は中央に向かって進む
         float waveOffset = Mathf.Sin(elapsedTime * waveFrequency) * waveAmplitude;
         Vector3 movement = new Vector3(waveOffset, -speed * Time.deltaTime, 0);
 
+        // Y軸は一定の移動、X軸は中央に向かって移動
+        float targetX = centerX;  // 中央のX座標
+        transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetX, transform.position.y, transform.position.z), speed * Time.deltaTime);
+
+        // 最終的な波の動き
         transform.Translate(movement, Space.World);
     }
 }
+
