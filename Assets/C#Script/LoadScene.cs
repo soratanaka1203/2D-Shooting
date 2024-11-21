@@ -4,6 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class LoadScene : MonoBehaviour
 {
+    [SerializeField] GameObject itemCanvas;
+    [SerializeField] GameObject defaultCanvas;
+
     //スタートボタンが押されたとき画面を遷移させる
     public void TapStart()
     {
@@ -30,5 +33,17 @@ public class LoadScene : MonoBehaviour
     public void LoadThisScene() 
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ActiveItemCanvas()
+    {
+        defaultCanvas.SetActive(false);
+        itemCanvas.SetActive(true);
+    }
+
+    public void BackDefaultCanvas()
+    {
+        defaultCanvas.SetActive(true);
+        itemCanvas.SetActive(false);
     }
 }

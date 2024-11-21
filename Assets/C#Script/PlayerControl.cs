@@ -35,7 +35,7 @@ public class PlayerControl : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI ResultGameOver;
 
-    private bool isShield = false;
+    public bool isShield = false;
     public GameObject shieldObject; // シールドのプレハブまたは子オブジェクト
 
     void Start()

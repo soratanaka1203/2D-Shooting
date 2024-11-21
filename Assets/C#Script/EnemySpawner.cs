@@ -11,6 +11,7 @@ public class EnemySpawner : MonoBehaviour
 
     private bool bossIs = false; // ボスが登場したかどうかのフラグ
     private float startTime; // スポーン開始時の時刻を保持
+    private float timeElapsed = 0; // 経過時間を追跡
 
     void Start()
     {
@@ -64,76 +65,88 @@ public class EnemySpawner : MonoBehaviour
     // 敵を定期的にスポーンするコルーチン
     IEnumerator SpawnEnemies()
     {
+        // コルーチンのループ。永遠に繰り返される
         while (true)
         {
-            // スポーン開始から90秒経過したらボスを登場させる
-            if (Time.time - startTime >= 90)
+            // 経過時間を更新。timeElapsedはスポーン間隔を考慮した経過時間
+            timeElapsed += spawnInterval;
+
+            // ボスがまだ登場していないかつスポーン開始から90秒が経過した場合、ボスを登場させる
+            if (Time.time - startTime >= 90 && !bossIs)
             {
-                if (!bossIs) // まだボスが登場していない場合
-                {
-                    boss.transform.position = new Vector3(0, 40, 0); // ボスの初期位置を設定
-                    boss.SetActive(true); // ボスをアクティブ化
-                    bossIs = true; // フラグを更新
-                    Debug.Log("Boss Active: " + boss.activeSelf); // デバッグログでボスの状態を確認
-                    Debug.Log("Boss Position: " + boss.transform.position); // ボスの位置を確認
-                }
+                // ボスの初期位置を設定（画面外に配置）
+                boss.transform.position = new Vector3(0, 40, 0);
+                boss.SetActive(true); // ボスをアクティブ化
+                bossIs = true; // ボスが登場したことを示すフラグ
+                Debug.Log("Boss Active: " + boss.activeSelf); // ボスがアクティブになったことをデバッグ出力
             }
 
             // プールから敵を取得
             var enemyObject = enemyPool.GetEnemy();
             if (enemyObject != null)
             {
-                // 敵のスポーン位置をランダムに設定
+                // 敵のスポーン位置をランダムに設定（画面の上部）
                 enemyObject.transform.position = new Vector3(Random.Range(-50f, 50f), 55f, 0.0f);
-                enemyObject.transform.rotation = Quaternion.identity;
+                enemyObject.transform.rotation = Quaternion.identity; // 回転をリセット
 
-                // 敵の動作とスコア設定
+                // 敵の制御用コンポーネントとスコア、体力管理用コンポーネントを取得
                 var enemyControl = enemyObject.GetComponent<EnemyControl>();
                 var enemyBH = enemyObject.GetComponent<BulletHit>();
                 SpriteRenderer spriteRenderer = enemyObject.GetComponent<SpriteRenderer>();
 
-                // 各コンポーネントが存在するか確認
+                // もし必要なコンポーネントが全て揃っていたら
                 if (enemyControl != null && enemyBH != null)
                 {
-                    // ランダムに敵の移動パターンを選択
-                    int randomMovement = Random.Range(0, 3);
+                    // 敵の移動パターンをランダムで選択
+                    int randomMovement = Random.Range(0, 4); // 0~3のランダムな整数を生成
+
+                    // 難易度に応じた倍率を設定
+                    float difficultyMultiplier = 1 + (timeElapsed / 120f); // timeElapsedの経過時間に基づき難易度を増加
+
+                    // 移動パターンに応じて処理を分岐
                     switch (randomMovement)
                     {
+                        // 直進移動
                         case 0:
-                            enemyControl.SetMovement(new StraightMovement()); // 直進移動
-                            spriteRenderer.color = Color.yellow;
-                            enemyBH.scorePoint = 500;
-                            enemyBH.enemyHp = 5;
+                            enemyControl.SetMovement(new StraightMovement());
+                            spriteRenderer.color = Color.yellow; // 敵の色を設定
+                            enemyBH.scorePoint = Mathf.RoundToInt(500 * difficultyMultiplier); // スコア設定（難易度に応じて増加）
+                            enemyBH.enemyHp = Mathf.CeilToInt(5 * difficultyMultiplier); // 体力設定（難易度に応じて増加）
                             break;
+
+                        // ジグザグ移動
                         case 1:
-                            enemyControl.SetMovement(new ZigzagMovement()); // ジグザグ移動
-                            spriteRenderer.color = Color.red;
-                            enemyBH.scorePoint = 350;
-                            enemyBH.enemyHp = 4;
+                            enemyControl.SetMovement(new ZigzagMovement());
+                            spriteRenderer.color = Color.red; // 敵の色を設定
+                            enemyBH.scorePoint = Mathf.RoundToInt(350 * difficultyMultiplier);
+                            enemyBH.enemyHp = Mathf.CeilToInt(4 * difficultyMultiplier);
                             break;
+
+                        // 円運動移動
                         case 2:
-                            enemyControl.SetMovement(new CircularMovement()); // 円運動
-                            spriteRenderer.color = Color.magenta;
-                            enemyBH.scorePoint = 200;
-                            enemyBH.enemyHp = 4;
+                            enemyControl.SetMovement(new CircularMovement());
+                            spriteRenderer.color = Color.magenta; // 敵の色を設定
+                            enemyBH.scorePoint = Mathf.RoundToInt(200 * difficultyMultiplier);
+                            enemyBH.enemyHp = Mathf.CeilToInt(4 * difficultyMultiplier);
+                            break;
+
+                        // 波状移動（新しく追加した移動パターン）
+                        case 3:
+                            enemyControl.SetMovement(new WaveMovement());
+                            spriteRenderer.color = Color.cyan; // 敵の色を設定
+                            enemyBH.scorePoint = Mathf.RoundToInt(600 * difficultyMultiplier);
+                            enemyBH.enemyHp = Mathf.CeilToInt(6 * difficultyMultiplier);
                             break;
                     }
                 }
-                else
-                {
-                    Debug.LogError($"EnemyControl or BulletHit component not found on the enemy object: {enemyObject.name}");
-                }
-            }
-            else
-            {
-                Debug.LogError("Failed to get enemy from pool.");
             }
 
-            // スポーン間隔を減少させ、最小値以下にならないようにする
+            // スポーン間隔を減少させ、最小値以下にならないように制限
             spawnInterval = Mathf.Max(spawnInterval - spawnIntervalDecreaseRate, minSpawnInterval);
 
             // 次のスポーンまで待機
             yield return new WaitForSeconds(spawnInterval);
         }
     }
+
 }

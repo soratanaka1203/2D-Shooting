@@ -9,6 +9,8 @@ public class Item : MonoBehaviour
     public enum ItemType { Score, PlusBullet, Shield }
     public ItemType itemType;
 
+    public float speed = 2f;//落下スピード
+
     public ItemPool pool;
 
     [SerializeField] TextMeshProUGUI scoreText;
@@ -31,6 +33,8 @@ public class Item : MonoBehaviour
             // 弾をプールに戻す
             pool.ReleaseItem(gameObject);
         }
+
+        transform.position += new Vector3(0, -0.4f * speed, 0);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -61,6 +65,13 @@ public class Item : MonoBehaviour
                 }
                 break;
             case ItemType.Shield:
+                //すでにシールドを持っていたらスコアを加算
+                if (player.GetComponent<PlayerControl>().isShield)
+                {
+                    ScoreManager.Instance.AddScore(300);
+                    ScoreManager.Instance.SetDisplayScore(scoreText);
+                    break;
+                }
                 player.GetComponent<PlayerControl>().SetShiled(true);
                 break;
         }

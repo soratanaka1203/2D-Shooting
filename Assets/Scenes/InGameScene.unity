@@ -1173,8 +1173,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &619465877
 PrefabInstance:
@@ -3169,6 +3169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88a49711bcc3c4b43b4c19cd62708628, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemCanvas: {fileID: 0}
+  defaultCanvas: {fileID: 0}
 --- !u!1 &1619450770
 GameObject:
   m_ObjectHideFlags: 0
@@ -3350,7 +3352,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1714446338
 MonoBehaviour:

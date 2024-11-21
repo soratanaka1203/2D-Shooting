@@ -48,3 +48,22 @@ public class CircularMovement : IMovement//‰~‰^“®
         transform.position += new Vector3(x, y, transform.position.z);// V‚µ‚¢ˆÊ’u‚ÉˆÚ“®
     }
 }
+
+public class WaveMovement : IMovement
+{
+    private float speed = 3f; // Šî–{‚ÌˆÚ“®‘¬“x
+    private float waveFrequency = 2f; // ”g‚Ìü”g”
+    private float waveAmplitude = 2f; // ”g‚ÌU•
+    private float elapsedTime = 0f; // Œo‰ßŠÔ
+
+    public void Move(Transform transform)
+    {
+        elapsedTime += Time.deltaTime;
+
+        // ‚’¼•ûŒü‚É‘Oi‚µ‚Â‚ÂA”gó‚É‰¡•ûŒü‚ÖˆÚ“®
+        float waveOffset = Mathf.Sin(elapsedTime * waveFrequency) * waveAmplitude;
+        Vector3 movement = new Vector3(waveOffset, -speed * Time.deltaTime, 0);
+
+        transform.Translate(movement, Space.World);
+    }
+}
