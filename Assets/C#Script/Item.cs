@@ -1,6 +1,7 @@
 using DG.Tweening.Core.Easing;
 using UnityEngine;
 using MyNameSpace;
+using TMPro;
 
 public class Item : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class Item : MonoBehaviour
     public ItemType itemType;
 
     public ItemPool pool;
+
+    [SerializeField] TextMeshProUGUI scoreText;
 
     private void Start()
     {
@@ -36,6 +39,7 @@ public class Item : MonoBehaviour
         {
             ApplyEffect(collision.gameObject);
             pool.ReleaseItem(gameObject); //オブジェクトプールに戻す
+            Debug.Log("アイテムを獲得");
         }
     }
 
@@ -46,6 +50,7 @@ public class Item : MonoBehaviour
         {
             case ItemType.Score:
                 ScoreManager.Instance.AddScore(500);
+                ScoreManager.Instance.SetDisplayScore(scoreText);
                 break;
             case ItemType.PlusBullet:
                 int bulletCount = player.GetComponent<PlayerControl>().bulletCount++;

@@ -19,7 +19,7 @@ public class BulletHit : MonoBehaviour
 
     public int scorePoint = 100; // 敵を倒したときに得られるスコアのデフォルト値
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private float dropChance = 1f; // アイテムが出現する確率 (0.3 = 30%)
+    [SerializeField] private float dropChance = 0.4f; // アイテムが出現する確率 (0.3 = 30%)
 
     private void Start()
     {
