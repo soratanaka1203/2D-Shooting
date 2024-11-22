@@ -71,7 +71,6 @@ public class BulletPool : MonoBehaviour
 
         bullet.SetActive(false);
         bulletPool.Release(bullet); // プールに戻す
-        Debug.Log($"弾がプールに戻されました。プール内の弾の数: {bulletPool.CountAll}");
     }
 
 

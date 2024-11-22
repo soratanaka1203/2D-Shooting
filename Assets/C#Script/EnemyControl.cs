@@ -57,6 +57,7 @@ public class EnemyControl : MonoBehaviour
                 // 弾の速度を設定
                 Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
                 bulletRb.velocity = direction * 30f; // プレイヤー方向に速度を設定
+                
             }
         }
     }

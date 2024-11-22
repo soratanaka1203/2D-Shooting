@@ -6,6 +6,11 @@ public class GameManager : MonoBehaviour
 {
     private bool gameIsCleared = false;
 
+    private void Start()
+    {
+        Time.timeScale = 1;  // ゲームを通常速度に戻す
+    }
+
     public void OnGameClear()
     {
         gameIsCleared = true;  // ゲームクリアフラグを立てる
