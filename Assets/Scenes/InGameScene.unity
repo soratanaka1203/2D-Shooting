@@ -2771,6 +2771,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3566014361473234667, guid: 401d8aca9e846254890399f66cd7de66, type: 3}
+      propertyPath: volum
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566014361473234667, guid: 401d8aca9e846254890399f66cd7de66, type: 3}
       propertyPath: bulletPool
       value: 
       objectReference: {fileID: 1004586397}

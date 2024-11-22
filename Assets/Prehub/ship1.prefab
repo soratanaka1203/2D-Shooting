@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 212833696140276620}
   - component: {fileID: 3566014361473234667}
   - component: {fileID: 8481178009023888774}
-  - component: {fileID: 2481580754691192267}
+  - component: {fileID: 584766034003289166}
   m_Layer: 6
   m_Name: ship1
   m_TagString: Player
@@ -217,7 +217,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.04}
   serializedVersion: 2
   m_Radius: 0.1
---- !u!50 &2481580754691192267
+--- !u!50 &584766034003289166
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0

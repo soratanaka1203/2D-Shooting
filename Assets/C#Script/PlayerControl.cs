@@ -28,7 +28,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] AudioClip shotSe; // 弾発射時の音
     [SerializeField] AudioClip dethSe; // プレイヤー死亡時の音
     [SerializeField] AudioPlayer audioPlayer; // オーディオ管理クラス
-    float volum = 5f; // 音量
+    public float volum = 5f; // 音量
 
     [SerializeField] GameObject gameOverUi; // ゲームオーバーUI
     [SerializeField] GameObject enemySpawner; // 敵のスポナー
@@ -98,18 +98,26 @@ public class PlayerControl : MonoBehaviour
             }
             else
             {
-                
-                ScoreManager.Instance.SetDisplayScore(ResultGameOver);//結果を表示
-                ScoreManager.Instance.SetRanking(ScoreManager.Instance.score); // スコアをランキングにセット
-                ScoreManager.Instance.ResetScore(); // スコアをリセット
 
-                // ゲームオーバーUIを表示
-                gameOverUi.SetActive(true);
-                enemySpawner.SetActive(false); // 敵のスポナーを非アクティブ化
-                audioPlayer.PlayAudio(dethSe, volum); // 死亡時の音を再生
-                Destroy(gameObject); // プレイヤーを破棄
+                StartCoroutine(HandleDeath());
             }
         }
+    }
+
+    //ダメージを受けた時
+    private IEnumerator HandleDeath()
+    {
+        audioPlayer.PlayAudio(dethSe, volum); // 死亡時の音を再生
+        yield return new WaitForSeconds(0.3f); // 音再生のため1秒待機
+
+        ScoreManager.Instance.SetDisplayScore(ResultGameOver); // 結果を表示
+        ScoreManager.Instance.SetRanking(ScoreManager.Instance.score); // スコアをランキングにセット
+        ScoreManager.Instance.ResetScore(); // スコアをリセット
+
+        gameOverUi.SetActive(true); // ゲームオーバーUIを表示
+        enemySpawner.SetActive(false); // 敵のスポナーを非アクティブ化
+
+        Destroy(gameObject); // プレイヤーを破棄
     }
 
     // 弾を打つ
