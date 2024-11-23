@@ -108,7 +108,7 @@ public class PlayerControl : MonoBehaviour
     private IEnumerator HandleDeath()
     {
         audioPlayer.PlayAudio(dethSe, volum); // 死亡時の音を再生
-        yield return new WaitForSeconds(0.3f); // 音再生のため1秒待機
+        yield return new WaitForSeconds(0.1f); // 音再生のため1秒待機
 
         ScoreManager.Instance.SetDisplayScore(ResultGameOver); // 結果を表示
         ScoreManager.Instance.SetRanking(ScoreManager.Instance.score); // スコアをランキングにセット

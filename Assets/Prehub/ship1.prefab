@@ -120,7 +120,6 @@ Transform:
   - {fileID: 4467931037188094}
   - {fileID: 3133001492899464423}
   - {fileID: 3343075933627501185}
-  - {fileID: 1518358517833821018}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -195,7 +194,8 @@ MonoBehaviour:
   bulletCount: 1
   shotSe: {fileID: 8300000, guid: 881e3f52c86c94f26a60718d35627cd8, type: 3}
   dethSe: {fileID: 8300000, guid: c5f746fb95ac0d545b6aaaa96255122b, type: 3}
-  audioPlayer: {fileID: 3932832984752619559}
+  audioPlayer: {fileID: 0}
+  volum: 5
   gameOverUi: {fileID: 0}
   enemySpawner: {fileID: 0}
   ResultGameOver: {fileID: 0}
@@ -406,50 +406,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &5755144857237787843
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1518358517833821018}
-  - component: {fileID: 3932832984752619559}
-  m_Layer: 6
-  m_Name: AudioPlayer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1518358517833821018
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5755144857237787843}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.28411034, y: 0.69432235, z: -0.013534713}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4193583667243190}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3932832984752619559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5755144857237787843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2bc032d8d2303f4e9083c668596a639, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7871963217267717120
 GameObject:
   m_ObjectHideFlags: 0
